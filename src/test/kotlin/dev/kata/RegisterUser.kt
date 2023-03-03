@@ -6,16 +6,11 @@ import java.util.regex.Pattern
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-class RegisterUser {
-}
-
-
 class RegisterUserShould {
     @Test
     fun `save a new user`() {
         val mockUserRepository = MockUserRepository()
-        val userService = UserService(mockUserRepository)
-        val usersController = UserController(userService)
+        val usersController = UserController(mockUserRepository)
 
         usersController.save(UserDto("elpepe@gmail.com"))
 
@@ -25,8 +20,7 @@ class RegisterUserShould {
     @Test
     fun `not save an invalid user`() {
         val mockUserRepository = MockUserRepository()
-        val userService = UserService(mockUserRepository)
-        val usersController = UserController(userService)
+        val usersController = UserController(mockUserRepository)
 
         assertThrows<Exception> {
             usersController.save(UserDto("elpepegmail.com"))
@@ -35,21 +29,15 @@ class RegisterUserShould {
     }
 }
 
-class UserController(val userService: UserService) {
+class UserController(val userService: UserRepository) {
     fun save(user: UserDto) {
         val domainUser = user.toDomainModel()
         userService.save(domainUser)
     }
 }
 
-class UserService(val userRepository: UserRepository) {
-    fun save(user: User) {
-        userRepository.save(user)
-    }
-}
-
 interface UserRepository {
-    fun save(user: User): Unit
+    fun save(user: User)
 }
 
 
